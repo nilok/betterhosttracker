@@ -23,13 +23,8 @@
     </properties>
 
     <modules>
-        <module>model-inventory</module>
-        <module>model-flow-base</module>
-        <module>model-flow-service</module>
-        <module>model-flow-statistics</module>
-        <module>model-flow-management</module>
         <module>model-host</module>
-  </modules>
+    </modules>
 
     <build>
         <plugins>
