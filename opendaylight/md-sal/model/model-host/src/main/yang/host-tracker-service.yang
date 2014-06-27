@@ -19,10 +19,7 @@ module host-tracker-service {
     }
 
     grouping host {
-        leaf host-node-connector {
-            type at:address-node-connector;
-            description "host-node-connector";
-        }
+        uses at:address-node-connector;
         leaf id {
             type host-id;
             description "unique host identifier";
