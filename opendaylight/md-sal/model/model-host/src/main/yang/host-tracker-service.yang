@@ -1,5 +1,5 @@
 module host-tracker-service {
-    namespace "urn:opendaylight:hosttracker";
+    namespace "urn:opendaylight:betterhosttracker";
     prefix host-track;
 
     import yang-ext {prefix ext;}
