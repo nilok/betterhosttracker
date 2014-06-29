@@ -1,2 +1,4 @@
 opendaylight/md-sal/model/model-host/META-INF/MANIFEST.MF
+opendaylight/md-sal/betterhosttracker/plugin/META-INF/MANIFEST.MF
 target
+yang-gen-sal
