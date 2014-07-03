@@ -15,6 +15,7 @@
   <modules>
     <module>opendaylight/betterhosttracker/model/betterhosttracker-model</module>
     <module>opendaylight/betterhosttracker/implementation</module>
+    <module>mdhosttracker</module>
   </modules>
   <scm>
     <connection>scm:git:ssh://git.opendaylight.org:29418/controller.git</connection>

@@ -2,11 +2,7 @@ module host-tracker-service {
     namespace "urn:opendaylight:betterhosttracker";
     prefix host-track;
 
-    import yang-ext {prefix ext;}
-    import ietf-inet-types {prefix inet;}
     import ietf-yang-types {prefix yang;}
-    import opendaylight-inventory {prefix inv;}
-    import opendaylight-l2-types {prefix l2t;}
     import address-tracker {prefix at;}
 
     revision 2014-06-24 {
@@ -25,4 +21,12 @@ module host-tracker-service {
             description "unique host identifier";
         }
     }
+
+    container hosts {
+        list host {
+            key "id";
+            uses host;
+        }
+    }
+
 }
