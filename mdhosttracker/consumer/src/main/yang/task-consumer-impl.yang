@@ -1,0 +1,48 @@
+// vi: set smarttab et sw=4 tabstop=4:
+module task-consumer-impl {
+
+    yang-version 1;
+    namespace "urn:opendaylight:params:xml:ns:yang:controller:config:task-consumer:impl";
+    prefix "task-consumer-impl";
+
+    import config { prefix config; revision-date 2013-04-05; }
+    import opendaylight-md-sal-binding { prefix mdsal; revision-date 2013-10-28; }
+
+    description
+        "This module contains the base YANG definitions for
+        task-consumer impl implementation.";
+
+    revision "2014-05-23" {
+        description
+            "Initial revision.";
+    }
+
+    // This is the definition of consumer service interface identity.
+        identity task-consumer-service {
+            base "config:service-type";
+            config:java-class "org.opendaylight.betterhosttracker.consumer.TaskConsumerService";
+        }
+
+    // This is the definition of the service implementation as a module identity.
+    identity task-consumer-impl {
+            base config:module-type;
+            config:provided-service task-consumer-service;
+            // Specifies the prefix for generated java classes.
+            config:java-name-prefix TaskConsumer;
+    }
+
+    augment "/config:modules/config:module/config:configuration" {
+                case task-consumer-impl {
+                    when "/config:modules/config:module/config:type = 'task-consumer-impl'";
+
+                    container rpc-registry {
+                        uses config:service-ref {
+                            refine type {
+                                mandatory true;
+                                config:required-identity mdsal:binding-rpc-registry;
+                            }
+                        }
+                    }
+                }
+            }
+}
