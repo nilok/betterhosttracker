@@ -4,3 +4,8 @@ target
 yang-gen-sal
 *.class
 MANIFEST.MF
+.project
+.settings
+bin
+target-ide
+.classpath
