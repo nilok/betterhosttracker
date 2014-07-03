@@ -1,0 +1,23 @@
+Manifest-Version: 1.0
+Bnd-LastModified: 1404347030593
+Build-Jdk: 1.7.0_51
+Built-By: aanm
+Bundle-Activator: org.opendaylight.controller.betterhosttracker.plugin.i
+ nternal.BetterHostTrackerConsumer
+Bundle-ManifestVersion: 2
+Bundle-Name: betterhosttracker-impl
+Bundle-SymbolicName: org.opendaylight.controller.betterhosttracker-impl
+Bundle-Version: 0.0.1.SNAPSHOT
+Created-By: Apache Maven Bundle Plugin
+Export-Package: org.opendaylight.controller.betterhosttracker.plugin.int
+ ernal;uses:="org.opendaylight.controller.sal.binding.api,org.opendaylig
+ ht.yangtools.yang.binding";version="0.0.1.SNAPSHOT"
+Import-Package: org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang
+ .ietf.inet.types.rev100924;version="[2010.9,2011)",org.opendaylight.yan
+ gtools.yang.binding;version="[0.6,1)",org.opendaylight.controller.sal.b
+ inding.api;version="[1.1,2)",org.opendaylight.yangtools.yang.common;ver
+ sion="[0.6,1)",org.opendaylight.yang.gen.v1.urn.opendaylight.betterhost
+ tracker.rev140624,org.opendaylight.controller.sal.common.util;version="
+ [1.1,2)",com.google.common.util.concurrent;version="[14.0,15)",org.osgi
+ .framework;version="[1.7,2)"
+Tool: Bnd-2.1.0.20130426-122213

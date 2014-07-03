@@ -13,8 +13,8 @@
     <maven>3.0</maven>
   </prerequisites>
   <modules>
-    <module>opendaylight/md-sal/model/model-host</module>
-    <module>opendaylight/md-sal/betterhosttracker/plugin</module>
+    <module>opendaylight/betterhosttracker/model/betterhosttracker-model</module>
+    <module>opendaylight/betterhosttracker/implementation</module>
   </modules>
   <scm>
     <connection>scm:git:ssh://git.opendaylight.org:29418/controller.git</connection>

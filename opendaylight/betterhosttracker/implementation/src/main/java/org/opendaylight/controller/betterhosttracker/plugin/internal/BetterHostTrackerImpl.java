@@ -2,6 +2,7 @@ package org.opendaylight.controller.betterhosttracker.plugin.internal;
 
 import java.util.Map;
 import com.google.common.base.Preconditions;
+import java.util.Iterator;
 import org.opendaylight.controller.md.sal.common.api.data.DataChangeEvent;
 import org.opendaylight.controller.sal.binding.api.data.DataBrokerService;
 import org.opendaylight.controller.sal.binding.api.data.DataChangeListener;
@@ -37,6 +38,10 @@ public class BetterHostTrackerImpl implements DataChangeListener {
         }
         Map<InstanceIdentifier<?>, DataObject> linkOriginalData = change.getOriginalOperationalData();
         Map<InstanceIdentifier<?>, DataObject> linkUpdatedData = change.getUpdatedOperationalData();
+        Iterator<DataObject> iterator = linkOriginalData.values().iterator();
+        DataObject next = iterator.next();
+        AddressCapableNodeConnector t = (AddressCapableNodeConnector) next;
+        t.getAddresses().get(0).getIp();
         //aanm: How to read an IP address from the AddressCapableNodeConnector, is the DataObject?
     }
 

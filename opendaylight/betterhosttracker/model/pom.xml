@@ -13,7 +13,7 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>model-host</module>
+        <module>betterhosttracker-model</module>
     </modules>
 
     <properties>

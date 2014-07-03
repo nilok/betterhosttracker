@@ -6,7 +6,7 @@
         <groupId>org.opendaylight.controller.model</groupId>
         <version>1.1-SNAPSHOT</version>
     </parent>
-    <artifactId>model-host</artifactId>
+    <artifactId>betterhosttracker-model</artifactId>
     <groupId>org.opendaylight.controller.model</groupId>
     <packaging>bundle</packaging>
     <properties>
@@ -51,4 +51,5 @@
             <version>2010.09.24.4-SNAPSHOT</version>
         </dependency>
     </dependencies>
+    <name>betterhosttracker-model</name>
 </project>
