@@ -48,6 +48,10 @@ public class BetterHostTrackerImpl implements DataChangeListener {
 
     @Override
     public void onDataChanged(DataChangeEvent<InstanceIdentifier<?>, DataObject> change) {
+
+        // TODO: we should really spawn a new thread to do this or get it from a threadpool
+        //       to minimize how long we block the next notification
+
         if (change == null) {
             log.info("In onDataChanged: No Processing done as dataChangeEvent is null.");
         }
@@ -64,6 +68,15 @@ public class BetterHostTrackerImpl implements DataChangeListener {
                 //Host h = null;// = new Host();
                 //HostBuilder hb = new HostBuilder();
                 //hosts.add(hb);
+
+                // TODO: this should really be creating an "Entity" and passing to the logic of hosttracker_new
+                //       or something like it which will in turn, eventually manage a list of curated hosts
+                //
+                // The lists of curate hosts, will be published just like below, but after some pre-processing
+                // elsewhere.
+                //
+                // We may or may not want to keep a list of Entities in the MD-SAL data store, but I guessing
+                // not. Instead, we'll keep that as local variable(s) and just use them to do our processing.
 
                 Host host = new HostBuilder().setAddresses(Arrays.asList(addrs)).setId(new HostId(addrs.getMac().getValue())).build();
                 InstanceIdentifier<Host> hostId = InstanceIdentifier.builder(Hosts.class).child(Host.class, host.getKey()).build();
