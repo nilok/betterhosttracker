@@ -103,10 +103,6 @@ public class BetterHostTrackerImpl implements DataChangeListener {
                         // not. Instead, we'll keep that as local variable(s) and just use them to do our processing.
                     }
                 }
-                Iterator<DataObject> iterator = linkOriginalData.values().iterator();
-                DataObject next = iterator.next();
-                AddressCapableNodeConnector t = (AddressCapableNodeConnector) next;
-                t.getAddresses().get(0).getIp();
             }
         });
     }
