@@ -101,6 +101,7 @@
 					</execution>
 				</executions>
 			</plugin>
+            <!--clean generated sources -->
 			<plugin>
 				<artifactId>maven-clean-plugin</artifactId>
 				<configuration>
@@ -117,6 +118,29 @@
 		</plugins>
 		<pluginManagement>
 			<plugins>
+                <!--add generated source folders as source folders in eclipse -->
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>build-helper-maven-plugin</artifactId>
+                    <version>1.8</version>
+                    <executions>
+                        <execution>
+                            <id>add-source</id>
+                            <goals>
+                                <goal>add-source</goal>
+                            </goals>
+                            <phase>generate-sources</phase>
+                            <configuration>
+                                <sources>
+                                    <source>src/main/yang</source>
+                                    <source>${codeGeneratorPath}</source>
+                                    <source>${jmxGeneratorPath}</source>
+                                    <source>${salGeneratorPath}</source>
+                                </sources>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
 				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
