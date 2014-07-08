@@ -1,0 +1,32 @@
+module host-tracker-service {
+    namespace "urn:opendaylight:betterhosttracker";
+    prefix host-track;
+
+    import ietf-yang-types {prefix yang;}
+    import address-tracker {prefix at;}
+
+    revision 2014-06-24 {
+        description
+            "draft based on address-tracker 2014-06-17";
+    }
+
+    typedef host-id {
+        type yang:uuid;
+    }
+
+    grouping host {
+        uses at:address-node-connector;
+        leaf id {
+            type host-id;
+            description "unique host identifier";
+        }
+    }
+
+    container hosts {
+        list host {
+            key "id";
+            uses host;
+        }
+    }
+
+}
