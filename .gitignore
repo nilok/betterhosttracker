@@ -1,11 +1,40 @@
-opendaylight/md-sal/model/model-host/META-INF/MANIFEST.MF
-opendaylight/md-sal/betterhosttracker/plugin/META-INF/MANIFEST.MF
-target
-yang-gen-sal
-*.class
-MANIFEST.MF
+#####standard .git ignore entries#####
+
+## IDE Specific Files ##
+.classpath
 .project
 .settings
-bin
+.idea
+.externalToolBuilders
+maven-eclipse.xml
+workspace
+
+## Compilation Files ##
+*.class
+**/target
+target
 target-ide
-.classpath
+MANIFEST.MF
+
+## Misc Ignores (OS specific etc) ##
+bin/
+dist
+*~
+*.ipr
+*.iml
+*.iws
+classes
+out/
+.DS_STORE
+.metadata
+
+## Folders which contain auto generated source code ##
+yang-gen-config
+yang-gen-sal
+yang-gen-code
+
+
+#####Archetype specific .git ignore entries#######
+generate
+Archetype_Next_Steps.README 
+
