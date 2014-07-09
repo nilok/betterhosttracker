@@ -28,7 +28,8 @@
 							org.opendaylight.controller.sal.binding.api,
 							org.opendaylight.controller.sal.common.util,
 							com.google.common.util.concurrent,
-							org.osgi.framework
+							org.osgi.framework,
+							org.slf4j
 						</Import-Package>
 						<Export-Package>
 							org.opendaylight.mdhosttracker.plugin.internal
@@ -43,6 +44,11 @@
 		</plugins>
 	</build>
 	<dependencies>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>log4j-over-slf4j</artifactId>
+			<version>1.7.7</version>
+		</dependency>
 		<dependency>
 			<groupId>org.osgi</groupId>
 			<artifactId>org.osgi.core</artifactId>
