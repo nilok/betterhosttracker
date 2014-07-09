@@ -21,6 +21,18 @@
             <groupId>org.opendaylight.l2switch.addresstracker</groupId>
             <artifactId>addresstracker-model</artifactId>
             <version>0.1.0-SNAPSHOT</version>
+            <scope>runtime</scope>
+            <exclusions>
+                <exclusion>
+                    <artifactId>ietf-yang-types</artifactId>
+                    <groupId>org.opendaylight.yangtools.model</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.opendaylight.l2switch.addresstracker</groupId>
+            <artifactId>addresstracker-model</artifactId>
+            <version>0.1.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
