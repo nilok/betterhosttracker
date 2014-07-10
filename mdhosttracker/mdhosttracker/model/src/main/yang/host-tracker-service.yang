@@ -11,7 +11,7 @@ module host-tracker-service {
     }
 
     typedef host-id {
-        type yang:uuid;
+        type string;
     }
 
     grouping host {
