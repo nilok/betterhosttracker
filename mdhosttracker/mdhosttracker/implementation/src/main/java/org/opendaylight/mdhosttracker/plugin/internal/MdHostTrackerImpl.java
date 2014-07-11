@@ -52,6 +52,7 @@ public class MdHostTrackerImpl implements DataChangeListener {
 
     @Override
     public void onDataChanged(final AsyncDataChangeEvent<InstanceIdentifier<?>, DataObject> change) {
+        log.trace("onDataChanged: " + change.toString());
         // TODO: we should really spawn a new thread to do this or get it from a threadpool
         //       to minimize how long we block the next notification
         ExecutorService exec = Executors.newFixedThreadPool(1);

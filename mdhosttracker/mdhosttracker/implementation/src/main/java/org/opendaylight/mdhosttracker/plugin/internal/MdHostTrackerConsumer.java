@@ -27,6 +27,7 @@ public class MdHostTrackerConsumer extends AbstractBindingAwareConsumer
 
     @Override
     public void onSessionInitialized(ConsumerContext session) {
+        log.trace("onSessionInitialized");
         DataBroker dataService = session.<DataBroker>getSALService(DataBroker.class);
         mdHostTrackerImpl = new MdHostTrackerImpl(dataService);
         mdHostTrackerImpl.registerAsDataChangeListener();
