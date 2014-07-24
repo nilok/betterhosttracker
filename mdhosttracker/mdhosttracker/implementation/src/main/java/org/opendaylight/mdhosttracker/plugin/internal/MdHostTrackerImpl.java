@@ -1,5 +1,6 @@
 package org.opendaylight.mdhosttracker.plugin.internal;
 
+
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.util.concurrent.FutureCallback;
@@ -69,10 +70,10 @@ public class MdHostTrackerImpl implements DataChangeListener {
                     if (dataObject instanceof Addresses) {
                         InstanceIdentifier<NodeConnector> iinc = key.firstIdentifierOf(NodeConnector.class);
                         ReadOnlyTransaction readTx = dataService.newReadOnlyTransaction();
-                        ListenableFuture<Optional<DataObject>> dataFuture = readTx.read(LogicalDatastoreType.OPERATIONAL, iinc);
-                        Futures.addCallback(dataFuture, new FutureCallback<Optional<DataObject>>() {
+                        ListenableFuture<Optional<NodeConnector>> dataFuture = readTx.read(LogicalDatastoreType.OPERATIONAL, iinc);
+                        Futures.addCallback(dataFuture, new FutureCallback<Optional<NodeConnector>>() {
                             @Override
-                            public void onSuccess(final Optional<DataObject> result) {
+                            public void onSuccess(final Optional<NodeConnector> result) {
                                 if (result.isPresent()) {
                                     writeHostToMDSAL(result, dataObject);
                                 }
@@ -105,14 +106,14 @@ public class MdHostTrackerImpl implements DataChangeListener {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    private void writeHostToMDSAL(Optional<DataObject> result, DataObject dataObject) {
+    private void writeHostToMDSAL(Optional<NodeConnector> result, DataObject dataObject) {
         Addresses addrs = (Addresses) dataObject;
         // NodeConnector nodeConnector = (NodeConnector) result.get();
         Host host = new HostBuilder().setAddresses(Arrays.asList(addrs)).setId(new HostId(addrs.getMac().getValue())).build();
         InstanceIdentifier<Host> hostId = InstanceIdentifier.builder(Hosts.class).child(Host.class, host.getKey()).build();
         ReadWriteTransaction writeTx = dataService.newReadWriteTransaction();
         writeTx.put(LogicalDatastoreType.OPERATIONAL, hostId, host);
-        writeTx.commit();
+        writeTx.submit();
     }
 
     void registerAsDataChangeListener() {
