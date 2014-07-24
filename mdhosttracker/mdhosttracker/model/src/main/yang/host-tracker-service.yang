@@ -4,6 +4,7 @@ module host-tracker-service {
 
     import ietf-yang-types {prefix yang;}
     import address-tracker {prefix at;}
+    import opendaylight-inventory {prefix inv;}
 
     revision 2014-06-24 {
         description
@@ -11,11 +12,15 @@ module host-tracker-service {
     }
 
     typedef host-id {
+        description "This is opaque and unique, but don't assume anything about it other than that!";
         type string;
     }
 
     grouping host {
-        uses at:address-node-connector;
+        uses at:address-node-connector; // this is a list of Addresses
+        leaf-list attachment-point {
+            type inv:node-connector-ref;
+        }
         leaf id {
             type host-id;
             description "unique host identifier";
