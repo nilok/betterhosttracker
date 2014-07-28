@@ -1,43 +1,40 @@
 package org.opendaylight.mdhosttracker.plugin.internal;
 
-
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
-
 import java.util.Arrays;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-import org.opendaylight.controller.md.sal.common.api.data.AsyncDataBroker.DataChangeScope;
-import org.opendaylight.controller.md.sal.common.api.data.AsyncDataChangeEvent;
-import org.opendaylight.controller.md.sal.common.api.data.LogicalDatastoreType;
+import java.util.concurrent.atomic.AtomicLong;
 import org.opendaylight.controller.md.sal.binding.api.DataBroker;
 import org.opendaylight.controller.md.sal.binding.api.DataChangeListener;
 import org.opendaylight.controller.md.sal.binding.api.ReadOnlyTransaction;
 import org.opendaylight.controller.md.sal.binding.api.ReadWriteTransaction;
+import org.opendaylight.controller.md.sal.common.api.data.AsyncDataBroker.DataChangeScope;
+import org.opendaylight.controller.md.sal.common.api.data.AsyncDataChangeEvent;
+import org.opendaylight.controller.md.sal.common.api.data.LogicalDatastoreType;
+import org.opendaylight.controller.topologymanager.ITopologyManager;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.address.tracker.rev140617.AddressCapableNodeConnector;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.address.tracker.rev140617.address.node.connector.Addresses;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.mdhosttracker.rev140624.hosts.Host;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.mdhosttracker.rev140624.Hosts;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.mdhosttracker.rev140624.hosts.HostBuilder;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.mdhosttracker.rev140624.HostId;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.inventory.rev130819.NodeConnectorRef;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.inventory.rev130819.Nodes;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.inventory.rev130819.node.NodeConnector;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.inventory.rev130819.nodes.Node;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.mdhosttracker.rev140624.HostId;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.mdhosttracker.rev140624.Hosts;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.mdhosttracker.rev140624.hosts.Host;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.mdhosttracker.rev140624.hosts.HostBuilder;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.mdhosttracker.rev140624.hosts.HostKey;
 import org.opendaylight.yangtools.yang.binding.DataObject;
 import org.opendaylight.yangtools.yang.binding.InstanceIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- *
- * @author aanm
- * @version 0.0.1
- */
 public class MdHostTrackerImpl implements DataChangeListener {
 
     private static final int CPUS = Runtime.getRuntime().availableProcessors();
@@ -45,10 +42,18 @@ public class MdHostTrackerImpl implements DataChangeListener {
     private static final Logger log = LoggerFactory.getLogger(MdHostTrackerImpl.class);
 
     private DataBroker dataService;
+    private ITopologyManager topologyManager;
 
-    MdHostTrackerImpl(DataBroker dataService) {
+    private ConcurrentHashMap<HostKey, Host> hosts;
+
+    private AtomicLong id;
+
+    MdHostTrackerImpl(DataBroker dataService, ITopologyManager topologyManager) {
         Preconditions.checkNotNull(dataService, "dataBrokerService should not be null.");
         this.dataService = dataService;
+        this.topologyManager = topologyManager;
+        this.hosts = new ConcurrentHashMap<>();
+        this.id = new AtomicLong();
     }
 
     @Override
@@ -75,7 +80,7 @@ public class MdHostTrackerImpl implements DataChangeListener {
                             @Override
                             public void onSuccess(final Optional<NodeConnector> result) {
                                 if (result.isPresent()) {
-                                    writeHostToMDSAL(result, dataObject);
+                                    processHost(result, dataObject);
                                 }
                             }
 
@@ -102,17 +107,56 @@ public class MdHostTrackerImpl implements DataChangeListener {
         });
     }
 
+    private Host createHost(Addresses addrs, NodeConnector nodeConnector) {
+        HostBuilder hostBuilder = new HostBuilder();
+
+        if (addrs != null) {
+            hostBuilder.setAddresses(Arrays.asList(addrs));
+            hostBuilder.setId(new HostId(addrs.getMac().getValue()));
+        } else {
+            hostBuilder.setId(new HostId(Long.toString(this.id.getAndIncrement())));
+        }
+
+        if (nodeConnector != null) {
+            InstanceIdentifier<NodeConnector> iinc//
+                    = InstanceIdentifier.builder(Nodes.class)//
+                    .child(Node.class)//
+                    .child(NodeConnector.class, nodeConnector.getKey())//
+                    .build();
+            NodeConnectorRef ncr = new NodeConnectorRef(iinc);
+            hostBuilder.setAttachmentPoint(Arrays.asList(ncr));
+        }
+        Host host = hostBuilder.build();
+        return host;
+    }
+
+    private Host updateHost(Addresses addrs, NodeConnector nodeConnector) {
+        return null;
+    }
+
     void close() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    private void writeHostToMDSAL(Optional<NodeConnector> result, DataObject dataObject) {
+    private void processHost(Optional<NodeConnector> result, DataObject dataObject) {
         Addresses addrs = (Addresses) dataObject;
-        // NodeConnector nodeConnector = (NodeConnector) result.get();
-        Host host = new HostBuilder().setAddresses(Arrays.asList(addrs)).setId(new HostId(addrs.getMac().getValue())).build();
+        NodeConnector nodeConnector = (NodeConnector) result.get();
+        //check if nodeconnector is a internal or external.
+        //Great! Node connector is different from the one used on topology manager
+        //topologyManager.isInternal((org.opendaylight.controller.sal.core.NodeConnector) nodeConnector);
+        Host host = createHost(addrs, nodeConnector);
+        if (hosts.containsKey(host.getKey())) {
+            host = updateHost(addrs, nodeConnector);
+        }
+        hosts.put(host.getKey(), host);
+
+        writeHosttoMDSAL(host);
+    }
+
+    private void writeHosttoMDSAL(Host host) {
         InstanceIdentifier<Host> hostId = InstanceIdentifier.builder(Hosts.class).child(Host.class, host.getKey()).build();
         ReadWriteTransaction writeTx = dataService.newReadWriteTransaction();
-        writeTx.put(LogicalDatastoreType.OPERATIONAL, hostId, host);
+        writeTx.put(LogicalDatastoreType.OPERATIONAL, hostId, host, true);
         writeTx.submit();
     }
 

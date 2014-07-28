@@ -17,7 +17,8 @@ module host-tracker-service {
     }
 
     grouping host {
-        uses at:address-node-connector; // this is a list of Addresses
+        description "List of address node connectors attached to this host";
+        uses at:address-node-connector;
         leaf-list attachment-point {
             type inv:node-connector-ref;
         }
@@ -28,6 +29,7 @@ module host-tracker-service {
     }
 
     container hosts {
+        description "List of hosts found on the topology";
         list host {
             key "id";
             uses host;
